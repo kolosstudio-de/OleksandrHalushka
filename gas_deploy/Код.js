@@ -31,9 +31,40 @@ function doGet(e) {
   return ContentService.createTextOutput("AlexGruppee CRM V2 Active");
 }
 
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isLikelySpam(data) {
+  // Honeypot: hidden field "website" must stay empty for humans.
+  if (data && typeof data.website === 'string' && data.website.trim() !== '') {
+    return 'honeypot';
+  }
+  // Time-trap: humans need at least ~3s to fill the form.
+  const fillMs = Number(data && data.fillTime);
+  if (Number.isFinite(fillMs) && fillMs > 0 && fillMs < 3000) {
+    return 'too_fast';
+  }
+  return null;
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
+
+    const spamReason = isLikelySpam(data);
+    if (spamReason) {
+      // Silently accept: same response shape as success so bots don't probe.
+      console.warn('Rejected as spam:', spamReason);
+      return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     const targetSheetName = data.source === 'Bau' ? SHEET_ZAYAVKI_BAU : SHEET_ZAYAVKI_AUTO;
     const sheet = ss.getSheetByName(targetSheetName);
@@ -261,36 +292,56 @@ function sendFinalConfirmationEmail(data, finalDateTime) {
 
 function sendOwnerNotification(data, row) {
   const webAppUrl = ScriptApp.getService().getUrl();
-  const confirmUrl = webAppUrl + '?action=confirm&id=' + row + '&source=' + data.source;
-  const subject = '[NEUE ANFRAGE] ' + data.source + ': ' + data.firstName + ' ' + data.lastName;
-  
+  const confirmUrl = webAppUrl + '?action=confirm&id=' + row + '&source=' + encodeURIComponent(data.source || '');
+  const subject = '[NEUE ANFRAGE] ' + (data.source || '') + ': ' + (data.firstName || '') + ' ' + (data.lastName || '');
+
   const bodyText = `Neue Anfrage #${row}\n\nKunde: ${data.firstName} ${data.lastName}\nE-Mail: ${data.email}\nTelefon: ${data.phone}\nThema: ${data.topic}\nWunschtermin: ${data.prefDate} (${data.prefTime})\nSprache: ${data.language}\n\nLINK:\n${confirmUrl}`;
-  
+
   const cleanPhone = (data.phone || "").replace(/[^0-9]/g, '');
-  const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hallo ' + data.firstName + ', hier ist AlexGruppee. Danke für Ihre Anfrage zu ' + data.topic + '!')}` : '#';
-  
+  const waText = encodeURIComponent('Hallo ' + (data.firstName || '') + ', hier ist AlexGruppee. Danke für Ihre Anfrage zu ' + (data.topic || '') + '!');
+  const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : '#';
+
+  // Escape every user-controlled value before injecting into HTML.
+  const e = {
+    source: escapeHtml(data.source),
+    firstName: escapeHtml(data.firstName),
+    lastName: escapeHtml(data.lastName),
+    email: escapeHtml(data.email),
+    emailAttr: encodeURIComponent(data.email || ''),
+    phone: escapeHtml(data.phone),
+    phoneAttr: encodeURIComponent(data.phone || ''),
+    contactPref: escapeHtml(data.contactPref),
+    language: escapeHtml(String(data.language || '').toUpperCase()),
+    topic: escapeHtml(data.topic),
+    prefDate: escapeHtml(data.prefDate),
+    prefTime: escapeHtml(data.prefTime),
+    message: escapeHtml(data.message) || '- Keine Nachricht hinterlassen -',
+    waLink: escapeHtml(waLink),
+    confirmUrl: escapeHtml(confirmUrl)
+  };
+
   const btnStyle = 'display:inline-block;padding:14px 28px;background-color:#16a34a;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:bold;margin:10px 10px 10px 0;font-family:sans-serif;font-size:16px;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);';
   const waBtnStyle = 'display:inline-block;padding:14px 28px;background-color:#25D366;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:bold;margin:10px 0;font-family:sans-serif;font-size:16px;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);';
-  
+
   const htmlBody = `
     <div style="font-family:sans-serif;color:#1e293b;max-width:600px;margin:20px auto;border:1px solid #e2e8f0;border-radius:12px;padding:32px;background:#ffffff;box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);">
       <h2 style="margin-top:0;color:#0f172a;border-bottom:2px solid #f1f5f9;padding-bottom:16px;font-size:22px;">Neue Buchungsanfrage</h2>
-      <p style="font-size:15px;color:#475569;line-height:1.5;">Sie haben eine neue Anfrage über die Website (<b>${data.source}</b>) erhalten.</p>
-      
+      <p style="font-size:15px;color:#475569;line-height:1.5;">Sie haben eine neue Anfrage über die Website (<b>${e.source}</b>) erhalten.</p>
+
       <table style="width:100%;border-collapse:collapse;margin-top:20px;font-size:15px;">
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:140px;color:#64748b;">Kunde:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-weight:bold;font-size:16px;">${data.firstName} ${data.lastName}</td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">E-Mail:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;"><a href="mailto:${data.email}" style="color:#2563eb;text-decoration:none;">${data.email}</a></td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Telefon:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;"><a href="tel:${data.phone}" style="color:#2563eb;text-decoration:none;">${data.phone}</a></td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Kontaktweg:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;">${data.contactPref}</td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Sprache:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;"><b>${String(data.language).toUpperCase()}</b></td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Thema:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-weight:bold;color:#0f172a;">${data.topic}</td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Wunschtermin:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-weight:bold;color:#b91c1c;">${data.prefDate} (Fenster: ${data.prefTime})</td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;vertical-align:top;">Nachricht:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-style:italic;color:#475569;">${data.message || '- Keine Nachricht hinterlassen -'}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:140px;color:#64748b;">Kunde:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-weight:bold;font-size:16px;">${e.firstName} ${e.lastName}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">E-Mail:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;"><a href="mailto:${e.emailAttr}" style="color:#2563eb;text-decoration:none;">${e.email}</a></td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Telefon:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;"><a href="tel:${e.phoneAttr}" style="color:#2563eb;text-decoration:none;">${e.phone}</a></td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Kontaktweg:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;">${e.contactPref}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Sprache:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;"><b>${e.language}</b></td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Thema:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-weight:bold;color:#0f172a;">${e.topic}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;">Wunschtermin:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-weight:bold;color:#b91c1c;">${e.prefDate} (Fenster: ${e.prefTime})</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;vertical-align:top;">Nachricht:</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-style:italic;color:#475569;">${e.message}</td></tr>
       </table>
-      
+
       <div style="text-align:center;margin-top:20px;">
-        <a href="${waLink}" style="${waBtnStyle}">WhatsApp Chat öffnen</a><br>
-        <a href="${confirmUrl}" style="${btnStyle}">Status aktualisieren (CRM)</a>
+        <a href="${e.waLink}" style="${waBtnStyle}">WhatsApp Chat öffnen</a><br>
+        <a href="${e.confirmUrl}" style="${btnStyle}">Status aktualisieren (CRM)</a>
       </div>
       <p style="font-size:12px;color:#94a3b8;margin-bottom:0;text-align:center;margin-top:20px;">Automatisches AlexGruppee CRM System</p>
     </div>

@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kontakt | AlexGrupp Innenausbau</title>
+    <title>Kontakt | AlexGruppee Innenausbau</title>
     <meta name="description"
-        content="AlexGrupp Innenausbau kontaktieren — Angebot anfragen, Terminvereinabrung, WhatsApp.">
+        content="AlexGruppee Innenausbau kontaktieren — Angebot anfragen, Terminvereinabrung, WhatsApp.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -425,7 +425,7 @@
             <div class="contact-method">
                 <div class="contact-method-icon"><i class="fas fa-envelope"></i></div>
                 <div>
-                    <h4>E-Mail</h4><a href="mailto:info@alexgrupp.de">info@alexgrupp.de</a>
+                    <h4>E-Mail</h4><a href="mailto:info@alexgruppee.de">info@alexgruppee.de</a>
                 </div>
             </div>
             <div class="contact-method">
@@ -442,7 +442,7 @@
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2638.4!2d12.0432!3d48.9338!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479f9c4b7e83a34b%3A0x0!2sIndustriestr.%2022%2C%2093077%20Bad%20Abbach!5e0!3m2!1sde!2sde!4v1234567890"
                     width="100%" height="220" style="border:0; display:block;" allowfullscreen="" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
-                    title="AlexGrupp Innenausbau — Industriestr. 22, Bad Abbach">
+                    title="AlexGruppee Innenausbau — Industriestr. 22, Bad Abbach">
                 </iframe>
             </div>
         </div>
@@ -453,6 +453,10 @@
                 <p>Beschreiben Sie kurz Ihr Vorhaben — wir erstellen Ihnen ein kostenloses Angebot.</p>
                 <!-- Advanced Booking Form -->
                 <form action="#" method="POST" id="bookingFormBau">
+                    <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+                        <label for="website-bau">Website (bitte leer lassen)</label>
+                        <input type="text" id="website-bau" name="website" tabindex="-1" autocomplete="off">
+                    </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="firstName">Vorname *</label>
@@ -596,10 +600,10 @@
 
     <footer class="site-footer section" style="padding:40px 8%;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 1.5rem;">
-            <p style="margin:0;">&copy; 2026 AlexGrupp &middot; Alle Rechte vorbehalten</p>
+            <p style="margin:0;">&copy; 2026 AlexGruppee &middot; Alle Rechte vorbehalten</p>
             <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
                 <div class="social-links" style="display:flex; gap: 1rem; align-items: center;">
-                    <a href="https://www.instagram.com/alexgrupp.innenausbau/" target="_blank" rel="noopener"
+                    <a href="https://www.instagram.com/alexgruppee.innenausbau/" target="_blank" rel="noopener"
                         aria-label="Instagram" title="Instagram"
                         style="color: #94a3b8; font-size: 1.3rem; transition: color 0.2s;"
                         onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#94a3b8'">
@@ -628,6 +632,7 @@
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/components/smart-header.js"></script>
+    <script src="../js/booking-system.js"></script>
     <script src="../js/components/form-validate.js"></script>
     <script>
         AOS.init({ duration: 650, easing: 'ease-out-cubic', once: true, offset: 80, startEvent: 'DOMContentLoaded' });

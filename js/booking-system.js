@@ -4,46 +4,65 @@
  */
 
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyvRINsLOaXopVX9vns-bLzcAEBoXMJp7SLSc_v7udnk0GDa8mzcoUCvFsNVJcLWwXbWA/exec';
+const GAS_REQUEST_TIMEOUT_MS = 10000;
+
+const ERROR_MESSAGES = {
+    de: 'Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt.',
+    en: 'There was a problem sending your request. Please try again or contact us directly.',
+    uk: 'Не вдалося надіслати запит. Будь ласка, спробуйте ще раз або зв’яжіться з нами напряму.',
+    ru: 'Не удалось отправить запрос. Пожалуйста, попробуйте ещё раз или свяжитесь с нами напрямую.'
+};
+
+// Stamp the form with a load-time so we can spot bots that submit instantly.
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('form[id^="bookingForm"]').forEach(form => {
+        form.dataset.loadedAt = String(Date.now());
+    });
+});
 
 window.handleBookingSubmit = async function (form) {
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn.textContent;
-    
-    // Set loading state
+
     submitBtn.disabled = true;
-    submitBtn.textContent = '...'; // Or a localized spinner text
-    
+    submitBtn.textContent = '...';
+
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    
-    // Add current language and source (Auto/Bau)
+
     data.language = localStorage.getItem('ag-lang') || 'de';
     data.source = form.id.includes('Auto') ? 'Auto' : 'Bau';
     data.timestamp = new Date().toISOString();
+    // Anti-spam: how long the form was on screen before submit. Server rejects sub-3s submissions.
+    const loadedAt = Number(form.dataset.loadedAt);
+    data.fillTime = Number.isFinite(loadedAt) && loadedAt > 0 ? Date.now() - loadedAt : null;
+    // Honeypot: `website` is a hidden input that must stay empty.
+    data.website = formData.get('website') || '';
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), GAS_REQUEST_TIMEOUT_MS);
 
     try {
-        console.log('Sending booking data to GAS:', data);
-
-        // We use URLSearchParams to create a 'simple request' that avoids CORS preflight issues
-        const response = await fetch(GAS_WEB_APP_URL, {
+        // GAS Web App rejects CORS preflight, so we send a "simple request" with text/plain.
+        // mode:'no-cors' makes the response opaque — we treat any non-thrown fetch as delivered.
+        await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            mode: 'no-cors', // Essential for GAS to avoid preflight errors from simple static sites
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8' // GAS handles this as a postData blob
-            },
-            body: JSON.stringify(data)
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(data),
+            signal: controller.signal
         });
 
-        // With no-cors, we won't see the response content, but if it reaches this line, 
-        // the browser at least successfully sent the packet.
-        console.log('Booking submitted successfully (no-cors mode)');
         showSuccessMessage(form, data.language);
-
     } catch (error) {
-        console.error('Booking submission CRITICAL ERROR:', error);
-        alert('Ошибка при отправке. Пожалуйста, проверьте консоль браузера (F12) или свяжитесь с нами напрямую.');
+        console.error('Booking submission failed:', error);
+        const lang = data.language;
+        const msg = ERROR_MESSAGES[lang] || ERROR_MESSAGES.de;
+        alert(msg);
         submitBtn.disabled = false;
         submitBtn.textContent = originalBtnText;
+    } finally {
+        clearTimeout(timeoutId);
     }
 };
 
