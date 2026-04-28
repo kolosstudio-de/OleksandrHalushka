@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body { font-family: sans-serif; padding: 20px; color: #333; }
+      .info { background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+      label { display: block; margin-bottom: 5px; font-weight: bold; }
+      input, textarea { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+      button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+      button:disabled { background: #ccc; }
+    </style>
+  </head>
+  <body>
+    <h3>Confirm Appointment</h3>
+    <div class="info">
+      <strong>CLIENT:</strong> <?= name ?><br>
+      <strong>TOPIC:</strong> <?= topic ?><br>
+      <strong>PREFERRED:</strong> <?= pref ?>
+    </div>
+    <label>Final date and time:</label>
+    <input type="datetime-local" id="finalTime" required>
+    <label>Notes (for yourself):</label>
+    <textarea id="notes" rows="2"></textarea>
+    <button id="saveBtn" onclick="submit()">Confirm and send email</button>
+    <script>
+      function submit() {
+        var btn = document.getElementById('saveBtn');
+        var finalTime = document.getElementById('finalTime').value;
+        var notes = document.getElementById('notes').value;
+        if (!finalTime) { alert('Please select a time!'); return; }
+        btn.disabled = true;
+        btn.innerHTML = 'Saving...';
+        google.script.run
+          .withSuccessHandler(function() { google.script.host.close(); })
+          .withFailureHandler(function(err) { alert('Error: ' + err); btn.disabled = false; btn.innerHTML = 'Try again'; })
+          .executeFinalConfirmation(<?= row ?>, finalTime, notes);
+      }
+    </script>
+  </body>
+</html>

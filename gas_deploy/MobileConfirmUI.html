@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: -apple-system, system-ui, sans-serif; padding: 20px; background: #f4f6f9; }
+      .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      h2 { margin-top: 0; color: #1a1a1a; }
+      .field { margin-bottom: 20px; }
+      label { display: block; font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
+      input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+      button { width: 100%; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 15px; }
+      .btn-success { background: #16a34a; color: white; }
+      .btn-danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+      button:active { opacity: 0.8; }
+      .success { text-align: center; color: #16a34a; font-weight: bold; }
+      .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; background: #e0f2fe; color: #0284c7; font-weight: bold; margin-bottom: 10px; }
+      .badge.bau { background: #ffedd5; color: #c2410c; }
+    </style>
+  </head>
+  <body>
+    <div class="card" id="mainCard">
+      <? if (source === 'Bau') { ?>
+        <span class="badge bau">BAU (Bauen/Renovieren)</span>
+        <h2>Termin verwalten</h2>
+        <p style="color:#666; font-size: 14px; margin-bottom: 25px;">Notieren Sie hier das Datum für das Treffen oder den nächsten Schritt. Es wird <b>keine</b> automatische Bestätigung an den Kunden gesendet.</p>
+      <? } else { ?>
+        <span class="badge">AUTO (Werkstatt)</span>
+        <h2>Termin bestätigen</h2>
+        <p style="color:#666; font-size: 14px; margin-bottom: 25px;">Bitte bestätigen Sie das finale Datum. Der Kunde erhält eine automatische Bestätigungs-E-Mail mit Kalender-Link.</p>
+      <? } ?>
+      
+      <div class="field">
+        <label>DATUM & UHRZEIT (Pflicht für Kalender)</label>
+        <input type="datetime-local" id="finalTime" required>
+      </div>
+      <div class="field">
+        <label>NOTIZEN (Nur für Sie im Kalender)</label>
+        <textarea id="notes" placeholder="z.B. Reifenwechsel, Angebot abschicken..." rows="3"></textarea>
+      </div>
+      
+      <? if (source === 'Bau') { ?>
+        <button class="btn-success" id="submitBtn" onclick="submit('Confirmed')">SPEICHERN (Ohne E-Mail)</button>
+      <? } else { ?>
+        <button class="btn-success" id="submitBtn" onclick="submit('Confirmed')">BESTÄTIGEN & E-MAIL SENDEN</button>
+      <? } ?>
+      
+      <button class="btn-danger" id="rejectBtn" onclick="submit('Reject')">ABSAGE (Termin nicht möglich)</button>
+    </div>
+    
+    <script>
+      function submit(status) {
+        var finalTime = document.getElementById('finalTime').value;
+        var notes = document.getElementById('notes').value;
+        var rowId = <?= rowId ?>;
+        var source = "<?= source ?>";
+        
+        if (status === 'Confirmed' && !finalTime) { 
+          alert('Bitte Datum & Uhrzeit wählen!'); 
+          return; 
+        }
+        
+        if (status === 'Reject' && !confirm('Wirklich absagen? Bei "Auto" erhält der Kunde jetzt eine automatische Absage-Mail.')) {
+          return;
+        }
+
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('rejectBtn').disabled = true;
+        document.getElementById('submitBtn').innerText = 'WIRD VERARBEITET...';
+        
+        google.script.run
+          .withSuccessHandler(function(res) {
+            var msg = status === 'Reject' ? 'Anfrage abgelehnt & aus Kalender entfernt.' : 'Termin erfolgreich gespeichert!';
+            document.getElementById('mainCard').innerHTML = '<div class="success"><h3>Erledigt!</h3><p>'+msg+'</p></div>';
+          })
+          .withFailureHandler(function(err) {
+            alert('Fehler: ' + err.message);
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('rejectBtn').disabled = false;
+            document.getElementById('submitBtn').innerText = 'NOCHMAL VERSUCHEN';
+          })
+          .executeFinalConfirmation(rowId, finalTime, notes, source, status);
+      }
+    </script>
+  </body>
+</html>
