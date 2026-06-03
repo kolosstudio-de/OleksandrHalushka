@@ -106,15 +106,18 @@ class TestimonialSlider {
             const style = document.createElement('style');
             style.id = 'ts-styles';
             style.textContent = `
-                .ts-wrapper { position: relative; max-width: 900px; margin: 0 auto; padding: 0 40px; }
-                .ts-viewport { overflow: hidden; border-radius: 12px; }
-                .ts-track { display: flex; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
-                .ts-slide { flex: 0 0 100%; padding: 20px; box-sizing: border-box; }
+
+                .ts-wrapper { position: relative; max-width: 900px; margin: 0 auto; padding: 0 40px; box-sizing: border-box; width: 100%; }
+                .ts-viewport { overflow: hidden; border-radius: 12px; width: 100%; }
+                .ts-track { display: flex; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; }
+                .ts-slide { flex: 0 0 100%; padding: 20px; box-sizing: border-box; width: 100%; max-width: 100vw; }
                 .ts-card { 
                     padding: 3rem 2rem; 
                     border-radius: 16px; 
                     text-align: center;
                     transition: transform 0.3s;
+                    box-sizing: border-box;
+                    width: 100%;
                 }
                 .ts-card.auto { background: var(--color-auto-surface); border: 1px solid var(--color-auto-surface-border); }
                 .ts-card.bau { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
@@ -145,19 +148,14 @@ class TestimonialSlider {
                 .ts-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; cursor: pointer; transition: 0.3s; }
                 .ts-dot.active { transform: scale(1.5); }
                 .ts-dot.active.auto { background: var(--color-auto-primary); }
-                
-                .ts-dots { display: flex; justify-content: center; gap: 8px; margin-top: 2rem; }
-                .ts-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; cursor: pointer; transition: 0.3s; }
-                .ts-dot.active { transform: scale(1.5); }
-                .ts-dot.active.auto { background: var(--color-auto-primary); }
                 .ts-dot.active.bau { background: var(--color-bau-primary); }
                 
                 @media (max-width: 600px) {
-                    .ts-wrapper { padding: 0; }
+                    .ts-wrapper { padding: 0 10px; }
                     .ts-nav { display: none; }
-                    .ts-card { padding: 2rem 1.5rem; border-radius: 12px; }
+                    .ts-card { padding: 2rem 1.25rem; }
+                    .ts-slide { padding: 10px; }
                 }
-
             `;
             document.head.appendChild(style);
         }
