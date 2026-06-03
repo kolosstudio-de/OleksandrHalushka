@@ -123,6 +123,7 @@
         }
 
         .counter-item {
+            box-sizing: border-box;
             flex: 1;
             min-width: 140px;
             text-align: center;
@@ -281,7 +282,7 @@
 
         .testimonials-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             max-width: 1000px;
             margin: 3rem auto 0;
@@ -419,23 +420,28 @@
         </div>
     </section>
 
+    
     <!-- Counter Band -->
-    <div class="counter-band">
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="0">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-handshake"></i></span>
-            <span class="label" data-i18n="auto-counter-experience">Persönliche Betreuung</span>
+    <div class="counter-band" style="background: #161b27; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0;">
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="0" style="text-align: center; padding: 40px 24px; border-right: 1px solid rgba(255,255,255,0.05);">
+            <span class="count" style="font-size: 2.2rem; color: #3b7dd8; display: block; margin-bottom: 10px;"><i class="fas fa-euro-sign"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #f0f4f8; text-transform: none; display: block; letter-spacing: 0;">Top Konditionen</span>
+            <p style="font-size: 0.8rem; color: rgba(240,244,248,0.55); margin-top: 5px;">Faire und transparente Preise</p>
         </div>
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="80">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-map-marker-alt"></i></span>
-            <span class="label" data-i18n="auto-counter-clients">Region</span>
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="80" style="text-align: center; padding: 40px 24px; border-right: 1px solid rgba(255,255,255,0.05);">
+            <span class="count" style="font-size: 2.2rem; color: #3b7dd8; display: block; margin-bottom: 10px;"><i class="fas fa-file-signature"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #f0f4f8; text-transform: none; display: block; letter-spacing: 0;">Sichere Abwicklung</span>
+            <p style="font-size: 0.8rem; color: rgba(240,244,248,0.55); margin-top: 5px;">Ohne Risiko und Stress</p>
         </div>
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="160">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-star"></i></span>
-            <span class="label" data-i18n="auto-counter-quality">Profi-Qualität</span>
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="160" style="text-align: center; padding: 40px 24px; border-right: 1px solid rgba(255,255,255,0.05);">
+            <span class="count" style="font-size: 2.2rem; color: #3b7dd8; display: block; margin-bottom: 10px;"><i class="fas fa-bolt"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #f0f4f8; text-transform: none; display: block; letter-spacing: 0;">Schneller Prozess</span>
+            <p style="font-size: 0.8rem; color: rgba(240,244,248,0.55); margin-top: 5px;">In 24h zum Angebot</p>
         </div>
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="240">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-search"></i></span>
-            <span class="label" data-i18n="auto-counter-transparency">Transparenz</span>
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="240" style="text-align: center; padding: 40px 24px;">
+            <span class="count" style="font-size: 2.2rem; color: #3b7dd8; display: block; margin-bottom: 10px;"><i class="fas fa-car"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #f0f4f8; text-transform: none; display: block; letter-spacing: 0;">Alle Marken</span>
+            <p style="font-size: 0.8rem; color: rgba(240,244,248,0.55); margin-top: 5px;">Auch mit Mängeln oder Schäden</p>
         </div>
     </div>
 

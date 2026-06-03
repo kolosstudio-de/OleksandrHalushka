@@ -123,6 +123,7 @@
         }
 
         .counter-item {
+            box-sizing: border-box;
             flex: 1;
             min-width: 140px;
             text-align: center;
@@ -302,7 +303,7 @@
 
         .testimonials-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             max-width: 1000px;
             margin: 0 auto;
@@ -441,23 +442,28 @@
         </div>
     </section>
 
+    
     <!-- Counters -->
-    <div class="counter-band">
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="0">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-hammer"></i></span>
-            <span class="label" data-i18n="bau-counter-experience">Persönliche Betreuung</span>
+    <div class="counter-band" style="background: #ffffff; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0;">
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="0" style="text-align: center; padding: 40px 24px; border-right: 1px solid #e2e8f0;">
+            <span class="count" style="font-size: 2.2rem; color: #d97706; display: block; margin-bottom: 10px;"><i class="fas fa-check-circle"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #0f172a; text-transform: none; display: block; letter-spacing: 0;">Individuelle Planung</span>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Auf Ihre Wünsche abgestimmt</p>
         </div>
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="80">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-users"></i></span>
-            <span class="label" data-i18n="bau-counter-projects">Zufriedene Kunden in Bayern</span>
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="80" style="text-align: center; padding: 40px 24px; border-right: 1px solid #e2e8f0;">
+            <span class="count" style="font-size: 2.2rem; color: #d97706; display: block; margin-bottom: 10px;"><i class="fas fa-shield-alt"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #0f172a; text-transform: none; display: block; letter-spacing: 0;">100% Qualität</span>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Exakte und saubere Arbeit</p>
         </div>
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="160">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-star"></i></span>
-            <span class="label" data-i18n="bau-counter-clients">Positive Rückmeldungen</span>
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="160" style="text-align: center; padding: 40px 24px; border-right: 1px solid #e2e8f0;">
+            <span class="count" style="font-size: 2.2rem; color: #d97706; display: block; margin-bottom: 10px;"><i class="fas fa-file-invoice-dollar"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #0f172a; text-transform: none; display: block; letter-spacing: 0;">Transparente Kosten</span>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Keine versteckten Gebühren</p>
         </div>
-        <div class="counter-item" data-aos="fade-up" data-aos-delay="240">
-            <span class="count" style="font-size: 2.2rem"><i class="fas fa-shield-alt"></i></span>
-            <span class="label" data-i18n="bau-counter-quality">Qualitätsanspruch</span>
+        <div class="counter-item" data-aos="fade-up" data-aos-delay="240" style="text-align: center; padding: 40px 24px;">
+            <span class="count" style="font-size: 2.2rem; color: #d97706; display: block; margin-bottom: 10px;"><i class="fas fa-handshake"></i></span>
+            <span class="label" style="font-size: 0.95rem; font-weight: 700; color: #0f172a; text-transform: none; display: block; letter-spacing: 0;">Termintreue</span>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Pünktlich und zuverlässig</p>
         </div>
     </div>
 

@@ -117,7 +117,7 @@ class SmartHeader {
 
         // Burger Menu Toggle
         const burger = document.getElementById('burgerToggle');
-        const nav = document.getElementById('headerNav');
+        const nav = document.querySelector('.header-nav');
 
         if (burger && nav) {
             burger.addEventListener('click', () => {

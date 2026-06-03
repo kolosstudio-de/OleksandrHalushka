@@ -162,7 +162,7 @@ img {
   letter-spacing: 1.5px;
   color: var(--color-white);
   text-transform: uppercase;
-  white-space: nowrap;
+  /* white-space: nowrap; removed to allow wrapping on mobile */
 }
 
 .global-header .logo a {
@@ -313,6 +313,10 @@ img {
 
 /* Base button — both themes override color variables */
 .btn {
+  white-space: normal;
+  text-align: center;
+  height: auto;
+  line-height: 1.4;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -325,7 +329,7 @@ img {
   cursor: pointer;
   transition: var(--btn-transition);
   border: 2px solid transparent;
-  white-space: nowrap;
+  /* white-space: nowrap; removed to allow wrapping on mobile */
 }
 
 /* Primary — filled */
@@ -780,6 +784,10 @@ img {
   }
 
   .hero-ctas .btn {
+  white-space: normal;
+  text-align: center;
+  height: auto;
+  line-height: 1.4;
     width: 100%;
     max-width: 320px;
     justify-content: center;
@@ -902,6 +910,10 @@ img {
 /* ── Touch devices: guaranteed tap targets ───────────────── */
 @media (hover: none) and (pointer: coarse) {
   .btn {
+  white-space: normal;
+  text-align: center;
+  height: auto;
+  line-height: 1.4;
     min-height: 48px;
   }
 
@@ -1132,6 +1144,10 @@ img {
   }
 
   .hero-ctas .btn {
+  white-space: normal;
+  text-align: center;
+  height: auto;
+  line-height: 1.4;
     width: 100%;
     max-width: 320px;
     justify-content: center;
@@ -1233,6 +1249,10 @@ img {
 /* Touch: tap target minimum sizes */
 @media (hover: none) and (pointer: coarse) {
   .btn {
+  white-space: normal;
+  text-align: center;
+  height: auto;
+  line-height: 1.4;
     min-height: 48px;
   }
 
