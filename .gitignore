@@ -11,3 +11,6 @@ node_modules/
 *.swp
 .vscode/
 .idea/
+
+# Local SEO Guides
+seo/
