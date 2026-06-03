@@ -262,3 +262,25 @@
         padding: 88px 4% 40px;
     }
 }
+/* ==========================================================================
+   Bau Header Override — Light theme needs a light header
+   ========================================================================== */
+
+/* The global header uses a dark glass bg; override it for the light Bau theme */
+.theme-bau .global-header,
+.bau-theme .global-header {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Logo and nav links: dark on light header */
+.theme-bau .global-header .logo a,
+.bau-theme .global-header .logo a {
+    color: #0f172a !important;
+}
+
+.theme-bau .global-header.scrolled,
+.bau-theme .global-header.scrolled {
+    background: rgba(255, 255, 255, 0.98) !important;
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.08) !important;
+}

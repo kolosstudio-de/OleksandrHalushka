@@ -133,10 +133,10 @@ img {
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--color-glass-border);
-  /* Start hidden — JS adds .header-loaded to animate in */
-  transform: translateY(-24px);
-  opacity: 0;
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease, background 0.4s ease, box-shadow 0.4s ease;
+  /* Always visible — no JS dependency for basic display */
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, background 0.4s ease, box-shadow 0.4s ease;
 }
 
 .global-header.header-loaded {
@@ -200,6 +200,42 @@ img {
   background: #fff;
   border-radius: 10px;
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Dark burger lines for Bau (light) theme */
+.theme-bau .burger-menu span,
+.bau-theme .burger-menu span {
+  background: #1e293b !important;
+}
+
+/* LangSwitcher clone in mobile nav */
+.header-nav .langSwitcher-clone {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.header-nav .langSwitcher-clone .lang-btn {
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.header-nav .langSwitcher-clone .lang-btn:hover,
+.header-nav .langSwitcher-clone .lang-btn.active {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  border-color: rgba(255,255,255,0.5);
 }
 
 .burger-menu.active span:nth-child(1) {
