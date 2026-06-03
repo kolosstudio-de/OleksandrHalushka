@@ -143,6 +143,11 @@ class SmartHeader {
                 const mobileLang = document.createElement('div');
                 mobileLang.className = 'langSwitcher-clone';
                 nav.appendChild(mobileLang);
+                if (typeof window.renderSwitchers === 'function') {
+                    window.renderSwitchers();
+                } else {
+                    setTimeout(() => { if (typeof window.renderSwitchers === 'function') window.renderSwitchers(); }, 200);
+                }
             }
         }
     }

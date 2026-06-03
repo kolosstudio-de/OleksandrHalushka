@@ -656,7 +656,7 @@ img {
 
   /* Show burger icon */
   .burger-menu {
-    display: flex;
+    display: flex !important;
   }
 
   .burger-menu span {
@@ -1018,7 +1018,7 @@ img {
   }
 
   .burger-menu {
-    display: flex;
+    display: flex !important;
   }
 
   /* Make sure burger is visible on both themes */
@@ -1508,4 +1508,13 @@ img {
 
 body {
   animation: pageFadeIn 0.35s ease forwards;
+}
+
+/* Guaranteed mobile visibility */
+@media (max-width: 768px) {
+  .burger-menu {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
