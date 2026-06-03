@@ -1586,7 +1586,7 @@ body {
   }
 
   .header-controls {
-    gap: 8px !important;
+    gap: 20px !important; /* wider gap pushes the switcher closer to the logo */
   }
 
   .theme-switcher {
@@ -1607,7 +1607,15 @@ body {
     width: 24px !important;
     height: 18px !important;
     margin-left: 8px !important;
+    margin-right: 8px !important; /* push burger menu away from the right edge for comfortable tapping */
     padding: 2px !important;
+  }
+
+  /* Stretch navigation overlay to cover 100% viewport width despite parent header padding */
+  .header-nav {
+    margin-left: -24px !important;
+    width: calc(100% + 48px) !important;
+    height: 100vh !important;
   }
 
   /* Lang switcher clone visible inside mobile nav overlay */
@@ -1625,12 +1633,22 @@ body {
   .global-header {
     padding: 0 20px !important; /* side padding 20px on standard mobile screens */
   }
+
+  .header-nav {
+    margin-left: -20px !important;
+    width: calc(100% + 40px) !important;
+  }
 }
 
 /* Extra small screens adjustments */
 @media (max-width: 360px) {
   .global-header {
     padding: 0 12px !important; /* side padding 12px on small screens to fit elements */
+  }
+
+  .header-nav {
+    margin-left: -12px !important;
+    width: calc(100% + 24px) !important;
   }
 
   .global-header .logo {
