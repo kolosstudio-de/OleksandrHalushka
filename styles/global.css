@@ -721,9 +721,11 @@ img {
     font-size: 0.75rem;
   }
 
-  /* Hide inactive theme btn on mobile to save space */
-  .theme-switcher .switch-btn:not(.active) {
-    display: none;
+  /* Both theme buttons stay visible — ultra compact on mobile */
+  .theme-switcher .switch-btn {
+    padding: 4px 8px !important;
+    font-size: 0.65rem !important;
+    letter-spacing: 0.02em;
   }
 
   /* === LAYOUT === */
