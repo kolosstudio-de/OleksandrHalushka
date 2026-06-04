@@ -279,6 +279,50 @@
     color: #0f172a !important;
 }
 
+/* Navigation links color override for light header */
+.theme-bau .global-header .header-nav a,
+.bau-theme .global-header .header-nav a {
+    color: rgba(15, 23, 42, 0.7) !important;
+}
+
+.theme-bau .global-header .header-nav a:hover,
+.theme-bau .global-header .header-nav a.active,
+.bau-theme .global-header .header-nav a:hover,
+.bau-theme .global-header .header-nav a.active {
+    color: #0f172a !important;
+    border-bottom-color: #0f172a !important;
+}
+
+/* Logo icon (monogram) override to prevent inversion in light theme */
+.theme-bau .global-header .logo-icon,
+.bau-theme .global-header .logo-icon {
+    filter: invert(0) !important;
+}
+
+/* Language switcher style on light header */
+.theme-bau .global-header #langSwitcher,
+.bau-theme .global-header #langSwitcher {
+    background: rgba(15, 23, 42, 0.05) !important;
+    border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+.theme-bau .global-header .lang-btn,
+.bau-theme .global-header .lang-btn {
+    color: rgba(15, 23, 42, 0.6) !important;
+}
+
+.theme-bau .global-header .lang-btn:hover,
+.bau-theme .global-header .lang-btn:hover {
+    color: #0f172a !important;
+    background: rgba(15, 23, 42, 0.08) !important;
+}
+
+.theme-bau .global-header .lang-btn.active,
+.bau-theme .global-header .lang-btn.active {
+    background: rgba(15, 23, 42, 0.12) !important;
+    color: #0f172a !important;
+}
+
 .theme-bau .global-header.scrolled,
 .bau-theme .global-header.scrolled {
     background: rgba(255, 255, 255, 0.98) !important;
